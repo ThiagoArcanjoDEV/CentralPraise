@@ -1,0 +1,24 @@
+/** AREAS **/
+.areas{
+	height: 40px;
+	width: 47px;
+	background-image: url('../img/areas.png');
+	background-repeat: no-repeat;
+	display:block;
+	text-decoration: none;
+}
+.areas span{
+	line-height: 40px;
+	text-indent: 5px;
+	margin-left: 50px;
+}
+
+.baixo{ background-position: 0px 0px;}
+.violao{ background-position: -40px 0px;}
+.bateria{ background-position: -80px 0px;}
+.guitarra{ background-position: -120px 0px;}
+.teclado{ background-position: -160px 0px;}
+.som{ background-position: 0px -47px;}
+.multimidia{ background-position: -40px -47px;}
+.dirigente{ background-position: -80px -47px;}
+.voz{ background-position: -120px -47px;}
