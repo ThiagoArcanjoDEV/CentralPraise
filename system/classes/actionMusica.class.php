@@ -48,11 +48,14 @@ abstract class actionMusica{
 
 		if($Escala)
 		{
-	                $search['escala'] = $Escala[0]->getID();
-        	        $Musicas = EscalaDAO::EscalaMusicas($search);
-	                $inicios[] = 'Inicia assim....';
+			$search['escala'] = $Escala[0]->getID();
+			$Musicas = EscalaDAO::EscalaMusicas($search);
+			foreach($Musicas AS $Musica)
+			{
+				$inicios[] = self::getFirstLetter($Musica);
+			}
 		
-			return self::mountMusicaPopupTab($Musicas,$inicios,true);
+			return self::mountMusicaPopupTab($Musicas,$inicios,0,true);
 		}
 		else return array('',''); 
 	}
@@ -68,6 +71,7 @@ abstract class actionMusica{
 		$Cifras = MusicaDAO::search();
 		
 		$return = '';
+		$id = 0;
 		foreach($Cifras AS $Cifra)
 		{
 			$Musica = $Cifra->getMusica();
@@ -75,10 +79,11 @@ abstract class actionMusica{
 			$return .= '<span class="row-fluid">';
 			$return .= '<span class="span1">&nbsp;</span>';
 			$return .= '<label>';
-				$return .= '<span class="span1"><input type="checkbox" name="musicas[]" value="'.$Musica->getID().'" ></span>';
+				$return .= '<span class="span1"><input type="checkbox" id="musicas_'.$id.'" name="musicas" value="'.$Cifra->getID().'" ></span>';
 				$return .= '<span class="span10">'.$Musica->getNome().' (<b>'.$Cifra->getTom().'</b>)</span>';
 			$return .= '</label>';
 			$return .= '</span>';
+			$id++;
 		}
 		
 		return $return;
@@ -97,7 +102,7 @@ abstract class actionMusica{
 
 		$Musicas = $inicios = '';
 		
-				foreach($ids as $id)
+		foreach($ids as $id)
 		{
 			$search['musica_id'] = $id;
 			$search['with_cifras'] = '';
@@ -106,7 +111,7 @@ abstract class actionMusica{
 				foreach($Cifras AS $Cifra)
 				{
 					$Musicas[] = $Cifra;
-							$inicios[] = 'Inicia assim....';
+					$inicios[] = self::getFirstLetter($Cifra);
 				}
 			}
 		}
@@ -116,24 +121,26 @@ abstract class actionMusica{
 
 	private static function mountMusicaPopupTab($Cifras,$inicios,$focus = 0,$show_order = true)
 	{
-                $lista = '';
-                $musicasDivs = '';
-                for($a=0;$a<count($Cifras);$a++)
-                {
+		$lista = '';
+		$musicasDivs = '';
+		for($a=0;$a<count($Cifras);$a++)
+		{
 			$Musica = $Cifras[$a]->getMusica();
-                        if($a==$focus) $active = "active";
-                        else $active = "";
-
-                        $lista .= '<li class="'.$active.'">';
-                        $lista .= '<a href="#tab'.$a.'" data-toggle="tab">';
-                        $lista .= '<p class="margin-none"><strong> ';
+			if($a==$focus) $active = "active";
+			else $active = "";
+			
+			$lista .= '<li class="'.$active.'">';
+			$lista .= '<a href="#tab'.$a.'" data-toggle="tab">';
+			$lista .= '<p class="margin-none"><strong> ';
+			
 			if($show_order) $lista .= ($a+1).' - ';
+			
 			$lista .= $Musica->getNome().'</strong><br>';
 			$lista .= "TOM: ".$Cifras[$a]->getTom().'</strong><br>';
-                        $lista .= '<small>'.$inicios[$a].'</small></p>';
-                        $lista .= '</a></li>';
-                        $musicasDivs .= actionMusica::mountMusica($Cifras[$a],$active,$a);
-                }
+			$lista .= '<small>'.$inicios[$a].'</small></p>';
+			$lista .= '</a></li>';
+			$musicasDivs .= actionMusica::mountMusica($Cifras[$a],$active,$a);
+		}
 		
 		return array($lista,$musicasDivs);
 	}
@@ -212,5 +219,25 @@ abstract class actionMusica{
 		$return .= '</div>';
 
 		return $return;
+	}
+	
+	/**
+	 * Retorno a Primeira linha da letra da música
+	 * 
+	 * @param Cifra $Cifra
+	 * @return string
+	 */
+	private static function getFirstLetter($Cifra)
+	{
+		$xml = simplexml_load_string(utf8_encode($Cifra->getTexto()));
+		
+		$return = '';
+		$quant_line = count($xml->line);
+		$coluns = 0;
+		$row = 0;
+		foreach($xml->line as $line)
+		{
+			if(isset($line->letter['first']) && $line->letter['first']) return $line->letter;
+		}
 	}
 }

@@ -14,7 +14,8 @@ $(function(){
 	});
 
 	// Monta Popover
-	$('.mountPopover').click(function(){
+	$(document).on('click','.mountPopover',function()
+	{
 		var mount = $(this);
 		$.ajax({
 			type: "post",
@@ -24,6 +25,18 @@ $(function(){
 			$('.popover-content').html(retorno);
 		});
 		return false;
+	});
+	
+	// Monta Modal
+	$(document).on('click','.modalOpen',function()
+	{/*
+		bootbox.alert("Hello World!", function(result) 
+		{
+			$.gritter.add({
+				title: 'Callback!',
+				text: "I'm just a BootBox Alert callback!"
+			});
+		});*/
 	});
 
 	// Login
@@ -60,11 +73,11 @@ $(function(){
 	// Open - Louvor
 	$('div').on("click",".louvorOpen", function(){
 		var id = '';
-                if($(this).find('span.musica_id').text())
-                {
-                        id = $(this).find('span.musica_id').text();
-                        window.open('?louvoropen&music='+id,'LOUVOR');
-                }
+		if($(this).find('span.musica_id').text())
+		{
+				id = $(this).find('span.musica_id').text();
+				window.open('?louvoropen&music='+id,'LOUVOR');
+		}
 		else
 		{
 			if($('#listaEscaladosTitle').find('span.escala_id').text())
@@ -137,8 +150,8 @@ $(function(){
 		{
 			$.each(errors, function(index, value)
 			{
-				if(value=='login_senha_empty') types.push("");
-				else types.push("alert-error");
+				if(value=='login_senha_empty') types.push("notyfy_warning");
+				else types.push("notyfy_error");
 			});
 			
 			showAlerts(errors,types);
@@ -176,7 +189,7 @@ $(function(){
 		format: "dd/mm/yyyy hh:ii"
 	});
 	
-	$('#selectMembersModal').click(function()
+	$('#escalas_equipes').change(function()
 	{
 		var equipe = $('#escalas_equipes').val();
 		
@@ -189,13 +202,127 @@ $(function(){
 			 listaEscalados.html(retorno);
 		});
 	});
+	
+    if ($('#tabChange').length)
+    {
+        var escala = urlParam('change');
+        
+		$.ajax({
+			type: 'post',
+			url: '?ajax=escalas&change',
+			data: 
+			{
+				type: 'get',
+				escala:escala
+			}//,
+			//dataType: 'json'
+		}).done(function( retorno )
+		{
+			//var params = decodeURIComponent($.param(retorno));
+			
+			alert(retorno);
+		});
+    }
+	
+	$(document).on('click','.formSubmitButton',function()
+	{
+		var form = $(this).parents('form');
+		
+		switch(form.attr('name'))
+		{
+			case 'formAddEscala':
+				validFormAddEscala();
+				break;
+			case 'formChangeEscala':
+				validFormChangeEscala();
+				break;
+		}
+	});
 
+	$('#div_alerts').click(function()
+	{
+		$('#div_alerts').slideToggle();
+	});
 });
+
+function validFormAddEscala()
+{
+	$('#div_alerts').hide();
+	$('#div_alerts').html('');
+	var errors = [];
+	var types = [];
+	var form_ok = true;
+	
+	if($.trim($('#escalas_nome').val()) == '') errors.push('escalas_nome_empty');
+	if($.trim($('#escalas_data').val()) == '') errors.push('escalas_data_empty');
+	if($('#escalas_equipes').val() <= 0) errors.push('escalas_equipes_empty');
+	var musicas = [];
+	$('input[name=musicas]').each( function ()
+	{
+		if($(this).is(':checked')) musicas.push($(this).val());
+	});
+	if(musicas.length == 0) errors.push('escalas_musicas_empty');
+	var membros = [];
+	$('input[name=membros]').each( function ()
+	{
+		if($(this).is(':checked')) membros.push($(this).val());
+	});
+	if(membros.length == 0) errors.push('escalas_membros_empty');
+	
+	if(errors.length > 0)
+	{
+		$.each(errors, function(index, value)
+		{
+			if(value=='escalas_musicas_empty') types.push("notyfy_information");
+			else if(value=='escalas_membros_empty') types.push("notyfy_information");
+			else
+			{
+				form_ok = false;
+				types.push("notyfy_error");
+			}
+		});
+		
+		showAlerts(errors,types);
+	}
+	
+	
+	if(form_ok)
+	{
+		musicas
+		$.ajax({
+			type: 'post',
+			url: '?ajax=escalas&add',
+			data:
+			{
+				escalas_nome: $('#escalas_nome').val(),
+				escalas_data: $('#escalas_data').val(),
+				agenda_obs: $('#agenda_obs').val(),
+				escala_obs: $('#escala_obs').val(),
+				escalas_equipes: $('#escalas_equipes').val(),
+				musicas: musicas,
+				membros: membros
+			},
+			dataType: 'json'
+		}).done(function( retorno )
+		{
+			$.each(retorno[0],function(index,value)
+			{
+				types.push(value);
+				errors.push(retorno[1][index]);
+			});
+			
+			showAlerts(errors,types);
+			if(retorno[2]) setTimeout(function(){document.location = '?home';},2000); 
+		});
+	}
+	return false;
+}
 
 function showAlerts(msg,type)
 {
 	$('#div_alerts').html('');
-
+	$('#div_alerts').show();
+	
 	$.ajax({
 		type: 'post',
 		url: '?ajax=getMessages',
@@ -204,14 +331,18 @@ function showAlerts(msg,type)
 	}).done(function( retorno ){
 		$.each(retorno, function(index, value)
 		{
-			var listaDiv = null;
 			var div_alert = document.createElement('div');
-			$(div_alert).addClass("alert");
+			$(div_alert).addClass("notyfy_wrapper");
 			$(div_alert).addClass(type[index]);
-			$(div_alert).html(value);
+			$(div_alert).html('<div class="notyfy_message">'+value+'</div>');
 			$('#div_alerts').append(div_alert);
 		});
 	});
+	
+    $('html, body').animate(
+    {
+        scrollTop: $("#div_alerts").offset().top
+    }, 200);
 }
 
 function validateEmail(email) {
@@ -238,7 +369,7 @@ function mountListas(lista,id)
 				aux = Array();
 				aux[0] = $('#listaEscalados').children().find('tbody');
 				aux[1] = $('#listaMusicasEscala').children().find('tbody');
-				aux[2] = $('#listaEscaladosTitle').children().find('span');
+				aux[2] = $('#listaEscaladosTitle').find('h4');
 				retorno = retorno.split("||");
 				break;
 		}
@@ -250,6 +381,10 @@ function mountListas(lista,id)
 			aux[0].html(retorno[0]);
 			aux[1].html(retorno[1]);
 			aux[2].html(retorno[2]);
+			if(retorno[3])
+			{
+				aux[2].append(retorno[3]);
+			}
 		}
 		else{
 			aux.empty();
@@ -260,4 +395,18 @@ function mountListas(lista,id)
 	$("#loading").hide();
 
 	return false;
+}
+
+// Get URL Params
+function urlParam(name)
+{
+	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	if (results==null)
+	{
+		return null;
+	}
+	else
+	{
+		return results[1] || 0;
+	}
 }

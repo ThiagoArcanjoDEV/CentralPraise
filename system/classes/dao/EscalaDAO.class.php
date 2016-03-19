@@ -4,10 +4,10 @@
 * 
 * @author 	Thiago Arcanjo
 * 
-* @package	Class
+* @package		Class
 * @subpackage	Object
-* @access 	public
-* @see		DAO
+* @access 		public
+* @see			DAO
 */
 abstract class EscalaDAO implements DAO{
 	/**
@@ -162,11 +162,69 @@ abstract class EscalaDAO implements DAO{
 	* @param object
 	* @return boolean
 	**/
-	public static function add($objeto){
-		$Escala = self::mount($objeto);
-		
+	public static function add($objeto)
+	{
 		$SQL = new SQL;
-		return $Escala;
+		$Escala = self::mount($objeto);
+		$Equipe = $Escala->getEquipe();
+		$Agenda = $Escala->getAgenda();
+		
+		$query = "INSERT INTO escala (escala_obs,equipe,agenda) 
+				  VALUES('".$Escala->getObs()."',".$Equipe->getID().",".$Agenda->getID().")";
+		
+		if($SQL->query($query))
+		{
+			$Escala->setID($SQL->getLastID());
+			
+			return $Escala;
+		}
+		else return false;
+	}
+	
+	/**
+	* Adiciona um objeto no BD
+	* 
+	* @param array
+	* @return boolean
+	**/
+	public static function addEscalaCifra(Array $escala_cifra)
+	{
+		$SQL = new SQL;
+		
+		$query = '';
+		foreach($escala_cifra AS $row)
+		{
+			if(!empty($query)) $query .= ',';
+			$query .= '('.$row['escala'].','.$row['cifra'].')';
+		}
+		
+		$query = 'INSERT INTO escala_cifra VALUES'.$query.';';
+		
+		if($SQL->query($query)) return true;
+		else return false;
+	}
+	
+	/**
+	* Adiciona um objeto no BD
+	* 
+	* @param array
+	* @return boolean
+	**/
+	public static function addEscalaMembroAtuacao(Array $escala_membros)
+	{
+		$SQL = new SQL;
+		
+		$query = '';
+		foreach($escala_membros AS $row)
+		{
+			if(!empty($query)) $query .= ',';
+			$query .= '('.$row['escala'].','.$row['membro_atuacao'].')';
+		}
+		
+		$query = 'INSERT INTO escala_membro_atuacao VALUES'.$query.';';
+		
+		if($SQL->query($query)) return true;
+		else return false;
 	}
 	
 	/**
@@ -189,9 +247,10 @@ abstract class EscalaDAO implements DAO{
 	* @return Boolean
 	**/
 	public static function delete($objeto){
+		$SQL = new SQL;
 		$Escala = self::mount($objeto);
 		
-		$SQL = new SQL;
+		
 		return $Escala;
 	}
 	

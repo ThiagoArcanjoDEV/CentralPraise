@@ -1,15 +1,33 @@
 <?php
+/**
+* Class actionEscala - Ações relacionadas a escalas
+* 
+* @author 	Thiago Arcanjo
+* 
+* @package		Class
+* @access		public
+*/
 abstract class actionEscala{
-	public static function search($search = ""){
+	/**
+	* Busca dados no BD
+	* 
+	* @param array $search
+	* @return Escala
+	*/
+	public static function search($search = "")
+	{
 		$Escala = EscalaDAO::search($search);
 		return $Escala;
 	}
 	
 	/**
 	* Monta Listagem das Escalas
+	* 
+	* @param array $search
 	* @return string
 	*/
-	public static function listaEscalas($search = false){
+	public static function listaEscalas($search = false)
+	{
 		global $FileText;
 
 		if($search) $Escalas = EscalaDAO::search($search);
@@ -39,42 +57,28 @@ abstract class actionEscala{
 	
 	/**
 	* Monta Listagem dos Escalados
+	* 
+	* @param integer $escala_id
 	* @return string
 	*/
-	public static function listaEscalados($escala_id){
+	public static function listaEscalados($escala_id)
+	{
 		global $FileText;
 		
 		$search['escala'] = $escala_id;
 		$membro_atuacao = EscalaDAO::EscalaMembroAtuacao($search);
 		
 		return actionMembroAtuacao::listaMembrosAtuacao($membro_atuacao);
-	/*	
-		$return = "";
-		if($MembrosAtuacao){
-			for($a=0;$a<count($MembrosAtuacao);$a++){
-				$AArea = $MembrosAtuacao[$a]->getAArea();
-				$Membro = $MembrosAtuacao[$a]->getMembro();
-				if($MembrosAtuacao[$a]->getAtuacaoOK()=='nao') $atuacao = ' class="atuacao_nao"';
-				else $atuacao = '';
-				$return .= '<tr'.$atuacao.'>';
-					$return .= '<td class="center span4"><a class="areas '.$AArea->getIcon().' areas_small" data-toggle="tooltip" data-original-title="'.$AArea->getNome().'" data-placement="left" title="'.$AArea->getNome().'"></a></td>';
-					$return .= '<td class="span8">'.$Membro->getNome().'</td>';
-				$return .= '</tr>';
-			}
-		}
-		else{
-			$return .= '<tr>';
-				$return .= '<td colspan=2><center>'.$FileText->get('equipes','no_rows').'</center></td>';
-			$return .= '</tr>';
-		}
-		return $return;*/
 	}
 	
 	/**
 	* Monta Listagem dos Escalados
+	* 
+	* @param integer $escala_id
 	* @return string
 	*/
-	public static function listaMusicasEscala($escala_id){
+	public static function listaMusicasEscala($escala_id)
+	{
 		global $FileText;
 
 		$search['escala'] = $escala_id;
@@ -103,6 +107,116 @@ abstract class actionEscala{
 			$return .= '</tr>';
 		}
 		return $return;
+	}
+	
+	/**
+	* Adiciona uma nova escala
+	* 
+	* @param array $escala
+	* @return string
+	*/
+	public static function add($escala = false)
+	{
+		if($_SESSION['FORM']["LAST"] != $_SESSION['FORM']["THIS"])
+		{
+			$retorno = array();
+			$retorno[0][0] = 'notyfy_error';
+			$retorno[1][0] = 'escala_add_error';
+				
+			foreach($escala as $key => $string)
+			{
+				if(!empty($string) && !is_array($string) && !(testSearch::test($string))) $escala[$key] = '';
+			}
+			
+			$escala['agenda_nome'] = $escala['escalas_nome'];
+			$escala['agenda_data'] = $escala['escalas_data'];
+			$escala['equipe'] = $escala['escalas_equipes'];
+			
+			unset($escala['escalas_nome'],$escala['escalas_data'],$escala['escalas_equipes']);
+		
+			if($Agenda = actionAgenda::add($escala))
+			{
+				$_SESSION['FORM']["LAST"] = "formAddEscala";
+				$escala['agenda'] = $Agenda->getID();
+				
+				if($Escala = EscalaDAO::add($escala))
+				{
+					$retorno[0][0] = 'notyfy_success';
+					$retorno[1][0] = 'escala_add_ok';
+					$retorno[2] = true;
+								
+					if(isset($escala['musicas']) && !empty($escala['musicas']))
+					{
+						$escala_cifra = array();
+						foreach($escala['musicas'] AS $cifra)
+						{
+							$escala_cifra[] = array('escala' => $Escala->getID(),'cifra' => $cifra);
+						}
+						
+						if(self::addEscalaCifra($escala_cifra))
+						{
+							$retorno[0][] = 'notyfy_success';
+							$retorno[1][] = 'escala_cifra_add_ok';
+						}
+						else
+						{
+							$retorno[0][] = 'notyfy_warning';
+							$retorno[1][] = 'escala_cifra_add_error';
+						}
+					}
+					
+					if(isset($escala['membros']) && !empty($escala['membros']))
+					{
+						$escala_membros = array();
+						foreach($escala['membros'] AS $membro_atuacao)
+						{
+							$escala_membros[] = array('escala' => $Escala->getID(),'membro_atuacao' => $membro_atuacao);
+						}
+						
+						if(self::addEscalaMembroAtuacao($escala_membros))
+						{
+							$retorno[0][] = 'notyfy_success';
+							$retorno[1][] = 'escala_membro_add_ok';
+						}
+						else
+						{
+							$retorno[0][] = 'notyfy_warning';
+							$retorno[1][] = 'escala_membro_add_error';
+						}
+					}
+					
+				}
+			}
+		}
+		else
+		{
+			$retorno[0][0] = 'notyfy_information';
+			$retorno[1][0] = 'form_already_sended';
+		}
+		
+		return $retorno;
+	}
+	
+	/**
+	* Adiciona as musicas selecionadas para esta escala
+	* 
+	* @param array $escala_cifra
+	* @return boolean
+	*/
+	public function addEscalaCifra(Array $escala_cifra)
+	{
+		return EscalaDAO::addEscalaCifra($escala_cifra);
+	}
+	
+	/**
+	* Adiciona os membros escalados
+	* 
+	* @param array $escala_membros
+	* @return boolean
+	*/
+	public function addEscalaMembroAtuacao(Array $escala_membros)
+	{
+		return EscalaDAO::addEscalaMembroAtuacao($escala_membros);
 	}
 }
 ?>

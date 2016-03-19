@@ -35,10 +35,12 @@ class Escala extends ID{
 	* @param string $objeto
 	* @return none
 	*/
-	public function __construct($objeto = ""){
-		if(is_array($objeto) && !empty($objeto)){
-                        if(isset($objeto["escala"]) && !empty($objeto["escala"])) $this->setID($objeto["escala"]);
-                        elseif(!empty($objeto["escala_id"])) $this->setID($objeto["escala_id"]);
+	public function __construct($objeto = "")
+	{
+		if(is_array($objeto) && !empty($objeto))
+		{
+			if(isset($objeto["escala"]) && !empty($objeto["escala"])) $this->setID($objeto["escala"]);
+			elseif(!empty($objeto["escala_id"])) $this->setID($objeto["escala_id"]);
 			if(!empty($objeto["escala_obs"])) $this->setObs($objeto["escala_obs"]);
 		}
 		

@@ -1,11 +1,12 @@
 <?php
 /** Configurações do banco de dados **/
 	require_once("database.php");				// Arquivo com as configurações de PROD e DEV do Banco de Dados.
-	
+
 	defined('HOST') || define('HOST',DEV_HOST);		// Host do banco de dados
 	defined('USER') || define('USER',DEV_USER);		// Usuário do mysql
 	defined('PASS') || define('PASS',DEV_PASS);		// Senha do usuário
 	defined('DATABASE') || define('DATABASE',DEV_DATABASE);	// Banco de Dados
+	defined('CHARSET') || define('CHARSET','UTF8');	// CHARSET
 
 /** Configurações de pastas **/
 	defined('PAGES_TPL') || define('PAGES_TPL','view');
@@ -18,6 +19,10 @@
 	defined('APP_NAME') || define('APP_NAME','Central Praise');		// Título do APP
 	defined('APP_VERSION') || define('APP_VERSION','v1.1');			// Versao do APP
 	date_default_timezone_set('America/Sao_Paulo');
+
+/** Inicialização de Sessões utilizadas **/
+	if(!isset($_SESSION['FORM']["LAST"])) $_SESSION['FORM']["LAST"] = '';
+	if(!isset($_SESSION['FORM']["THIS"])) $_SESSION['FORM']["THIS"] = '';
 
 /** Configurações de Imagens **/
 	defined('ICON_LOGO') || define('ICON_LOGO','glyphicons chevron-right');			// Imagem padrão para LOGO
@@ -33,7 +38,7 @@
 	defined('ICON_PAINEL') || define('ICON_PAINEL','glyphicons fullscreen');		// Imagem padrão para o Painel
 	defined('ICON_LOGOUT') || define('ICON_LOGOUT','glyphicons eject');			// Imagem padrão para Logout
 	defined('ICON_CHANGE') || define('ICON_CHANGE','glyphicons edit');			// Imagem padrão para Logout
-	
+
 /** Configurações THEME **/
 	// development / production
 	defined('DEV') || define('DEV', false);

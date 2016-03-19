@@ -91,7 +91,8 @@ class Pages{
 	
 	/** ESCALAS **/
 	public function escalasPage(){
-		if(isset($_SESSION['ACESSO']['ID']))
+		$_SESSION['FORM']["LAST"] = '';
+		if(isset($_SESSION['ACESSO']['ID']) && $_SESSION['ACESSO']['ESCALA'] == 'write')
 		{
 			$this->pagesTPL->setTag('SELECT_EQUIPES',actionEquipe::mountSelectEquipes());
 			$this->pagesTPL->setTag('SELECT_MUSICAS',actionMusica::mountSelectMusicas());

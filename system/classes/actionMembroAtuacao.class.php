@@ -62,6 +62,7 @@ abstract class actionMembroAtuacao{
 		
 		$return = '';
 		$areas = array();
+		$id = 0;
 		foreach($Membros AS $MembroAtuacao)
 		{
 			$Area = $MembroAtuacao->getAArea();
@@ -81,10 +82,11 @@ abstract class actionMembroAtuacao{
 				$areas[$Area->getID()]['texto'] .= '<span class="row-fluid">';
 				$areas[$Area->getID()]['texto'] .= '<span class="span1">&nbsp;</span>';
 				$areas[$Area->getID()]['texto'] .= '<label>';
-					$areas[$Area->getID()]['texto'] .= '<span class="span1"><input type="checkbox" name="membros[]" value="'.$MembroAtuacao->getID().'" '.$checked.'></span>';
+					$areas[$Area->getID()]['texto'] .= '<span class="span1"><input type="checkbox" id="membros_'.$id.'" name="membros" value="'.$MembroAtuacao->getID().'" '.$checked.'></span>';
 					$areas[$Area->getID()]['texto'] .= '<span class="span10">'.$Membro->getNome().' (<b>'.$Membro->getTag().'</b>)</span>';
 				$areas[$Area->getID()]['texto'] .= '</label>';
 				$areas[$Area->getID()]['texto'] .= '</span>';
+				$id++;
 			}
 		}
 		

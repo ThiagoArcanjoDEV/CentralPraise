@@ -8,6 +8,7 @@ class SQL{
 		$this->link = mysql_connect(HOST,USER,PASS);
 		if($this->link){
 			$this->selectDB = mysql_select_db(DATABASE,$this->link);
+			mysql_set_charset(CHARSET);
 		}
 	}
 	

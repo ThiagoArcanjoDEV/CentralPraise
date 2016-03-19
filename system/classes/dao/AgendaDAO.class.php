@@ -48,11 +48,21 @@ abstract class AgendaDAO implements DAO{
 	* @param object
 	* @return boolean
 	**/
-	public static function add($objeto){
+	public static function add($objeto)
+	{
+		$SQL = new SQL;
 		$Agenda = self::mount($objeto);
 		
-		$SQL = new SQL;
-		return $Agenda;
+		$query = "INSERT INTO agenda (agenda_data,agenda_nome,agenda_obs) 
+				  VALUES('".$Agenda->getData('Y-m-d')."','".$Agenda->getNome()."','".$Agenda->getObs()."')";
+		
+		if($SQL->query($query))
+		{
+			$Agenda->setID($SQL->getLastID());
+			
+			return $Agenda;
+		}
+		else return false;
 	}
 	
 	/**

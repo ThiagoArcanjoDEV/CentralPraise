@@ -41,6 +41,5 @@
 			</div>
 		</div>
 		<div class="span1 hidden-phone">&nbsp;</div>
-		<div id="div_alerts" class="span6"></div>
 	</div>
 </div>

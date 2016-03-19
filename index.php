@@ -1,4 +1,7 @@
 <?php
+// Indica qual charset utilizado
+header('Content-Type: text/html; charset=utf-8');
+
 //# Iniciando a sessão #
 @session_start();
 

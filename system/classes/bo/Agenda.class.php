@@ -33,10 +33,12 @@ class Agenda extends ID{
 	* @param string $objeto
 	* @return none
 	*/
-	public function __construct($objeto = ""){
-		if(is_array($objeto) && !empty($objeto)){
-                        if(isset($objeto["agenda"]) && !empty($objeto["agenda"])) $this->setID($objeto["agenda"]);
-                        elseif(!empty($objeto["agenda_id"])) $this->setID($objeto["agenda_id"]);
+	public function __construct($objeto = "")
+	{
+		if(is_array($objeto) && !empty($objeto))
+		{
+			if(isset($objeto["agenda"]) && !empty($objeto["agenda"])) $this->setID($objeto["agenda"]);
+			elseif(!empty($objeto["agenda_id"])) $this->setID($objeto["agenda_id"]);
 			if(!empty($objeto["agenda_data"])) $this->setData($objeto["agenda_data"]);
 			if(!empty($objeto["agenda_nome"])) $this->setNome($objeto["agenda_nome"]);
 			if(!empty($objeto["agenda_obs"])) $this->setObs($objeto["agenda_obs"]);
