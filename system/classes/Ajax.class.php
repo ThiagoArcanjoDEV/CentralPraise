@@ -1,16 +1,16 @@
 <?php
 /**
 * Class Ajax - Recebe chamadas do cliente e retorno informações do BD
-* 
+*
 * @author 	Thiago Arcanjo
-* 
+*
 * @package		Class
 * @access		public
 */
 class Ajax{
 	public function Load($post){
 		global $FileText;
-		
+
 		switch($_GET['ajax']){
 			case 'igreja':
 				if(isset($_GET["select"]))
@@ -28,7 +28,7 @@ class Ajax{
 				{
 					$login = $post['login'];
 					$senha = $post['senha'];
-					
+
 					if($return = actionAcesso::doLogin($post['login'],$post['senha']))
 					{
 						echo '1|'.$FileText->get('login','ok');
@@ -105,7 +105,7 @@ class Ajax{
 				{
 					//checkLogin
 					$search['acesso_login'] = $post['login_text'];
-					$retorno = [];
+					$retorno = array();
 					$retorno[2] = false;
 					if($Acesso = actionAcesso::search($search))
 					{
@@ -123,7 +123,7 @@ class Ajax{
 						$Acesso = actionAcesso::search($search);
 						$Membro = $Acesso[0]->getMembro();
 					}
-					
+
 					if(!isset($retorno[0]))
 					{
 						if(!(actionAcesso::validateHash($post['login_senha'],$Acesso[0])))
@@ -135,7 +135,7 @@ class Ajax{
 						{
 							$post['member_id'] = $Membro->getID();
 							$post['acesso_id'] = $Acesso[0]->getID();
-							
+
 							if(!(actionMembro::update($post)) || !(actionAcesso::update($post)))
 							{
 								$retorno[0] = 'notyfy_error';
@@ -149,7 +149,7 @@ class Ajax{
 							}
 						}
 					}
-					
+
 					echo json_encode($retorno);
 				}
 				break;
