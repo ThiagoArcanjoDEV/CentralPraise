@@ -47,18 +47,19 @@ $(function(){
 			$('.formLoginButton').click(); //Trigger search button click event
 		}
 	});
-	$(document).on("click",".formLoginButton",function(){
+	$(document).on("click",".formLoginButton",function()
+	{
 		var login = $('#login_text').val();
 		var senha = $('#login_senha').val();
-                $.ajax({
-                        type: "post",
-                        url: "?ajax=login",
-                        data:
+		$.ajax({
+			type: "post",
+			url: "?ajax=login",
+			data:
 			{
 				login:login,
 				senha:senha
 			}
-                }).done(function( retorno ){
+		}).done(function( retorno ){
 			retorno = retorno.split('|');
 			if(retorno[0]=='1')
 			{
@@ -66,8 +67,8 @@ $(function(){
 				setTimeout(function(){document.location = '?';},1000);
 			}
 			else $('.restart').children('span').html(retorno[1]);
-                });
-                return false;
+		});
+		return false;
 	});
 
 	// Open - Louvor
@@ -183,7 +184,7 @@ $(function(){
 		}
 		return false;
 	});
-
+	
 	$('#datetimepicker').datetimepicker(
 	{
 		format: "dd/mm/yyyy hh:ii"
@@ -214,13 +215,15 @@ $(function(){
 			{
 				type: 'get',
 				escala:escala
-			}//,
-			//dataType: 'json'
-		}).done(function( retorno )
+			},
+			dataType: 'json'
+		}).done(function( data )
 		{
-			//var params = decodeURIComponent($.param(retorno));
+			alert(data['Agenda']['nome']);
+			$('#escala_id').val(data['id']);
+			$('#escalas_nome').attr('value',data['Agenda']['nome']);
 			
-			alert(retorno);
+			
 		});
     }
 	

@@ -1,7 +1,7 @@
 <?php
 /** Configurações do banco de dados **/
 	require_once("database.php");				// Arquivo com as configurações de PROD e DEV do Banco de Dados.
-
+	
 	defined('HOST') || define('HOST',DEV_HOST);		// Host do banco de dados
 	defined('USER') || define('USER',DEV_USER);		// Usuário do mysql
 	defined('PASS') || define('PASS',DEV_PASS);		// Senha do usuário
@@ -24,10 +24,6 @@
 if(!isset($_SESSION['FORM']["LAST"])) $_SESSION['FORM']["LAST"] = '';
 if(!isset($_SESSION['FORM']["THIS"])) $_SESSION['FORM']["THIS"] = '';
 
-/** Inicialização de Sessões utilizadas **/
-	if(!isset($_SESSION['FORM']["LAST"])) $_SESSION['FORM']["LAST"] = '';
-	if(!isset($_SESSION['FORM']["THIS"])) $_SESSION['FORM']["THIS"] = '';
-
 /** Configurações de Imagens **/
 	defined('ICON_LOGO') || define('ICON_LOGO','glyphicons chevron-right');			// Imagem padrão para LOGO
 	defined('ICON_MUSICAS') || define('ICON_MUSICAS','glyphicons music');			// Imagem padrão para Musicas
@@ -42,7 +38,7 @@ if(!isset($_SESSION['FORM']["THIS"])) $_SESSION['FORM']["THIS"] = '';
 	defined('ICON_PAINEL') || define('ICON_PAINEL','glyphicons fullscreen');		// Imagem padrão para o Painel
 	defined('ICON_LOGOUT') || define('ICON_LOGOUT','glyphicons eject');			// Imagem padrão para Logout
 	defined('ICON_CHANGE') || define('ICON_CHANGE','glyphicons edit');			// Imagem padrão para Logout
-
+	
 /** Configurações THEME **/
 	// development / production
 	defined('DEV') || define('DEV', false);
