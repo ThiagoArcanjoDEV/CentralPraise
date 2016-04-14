@@ -120,6 +120,24 @@ ul li{
 	vertical-align: center;
 }
 
+h4 a.right_link{
+	float: right;
+}
+h4 a.right_link:hover{
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.2;
+    filter: alpha(opacity=20); /* For IE8 and earlier */
+  }
+  100% {
+    opacity: 0.9;
+    filter: alpha(opacity=90); /* For IE8 and earlier */
+  }
+ }
+
 /** FORMS **/
 form label{
 	text-indent: 5px;
@@ -160,4 +178,12 @@ form button{
 	font-size: 10px;
 	text-align: center;
 	text-transform: uppercase;
+}
+/** ALERTS **/
+#div_alerts{
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 99999;
+	cursor: pointer;
 }
