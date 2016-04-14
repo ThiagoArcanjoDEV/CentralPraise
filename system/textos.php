@@ -106,4 +106,16 @@ $FileText->set('alert','login_senha_wrong','Senha digitada n&atilde;o est&aacute
 $FileText->set('alert','login_senha_conf','Senhas digitas s&atilde;o diferentes');
 $FileText->set('alert','data_changed_ok','Dados alterados com SUCESSO!');
 $FileText->set('alert','data_changed_error','N&atilde;o foi poss&iacute;vel alterar os dados. Tente Novamente');
+$FileText->set('alert','escalas_nome_empty','O <b>Nome do evento</b> n&atilde;o pode estar em branco');
+$FileText->set('alert','escalas_data_empty','Escoalha o <b>Dia e Hora</b> do Evento');
+$FileText->set('alert','escalas_equipes_empty','Selecione a <b>Equipe</b> escalada');
+$FileText->set('alert','escalas_musicas_empty','Voc&ecirc; n&atilde;o selecionou nenhuma <b>M&uacute;sica</b>. Lembre-se de selecionar posteriormente');
+$FileText->set('alert','escalas_membros_empty','Voc&ecirc; n&atilde;o escalou nenhum <b>Membro</b>. Lembre-se de escalar posteriormente');
+$FileText->set('alert','escala_add_ok','<b>Escala</b> adicionada com sucesso');
+$FileText->set('alert','escala_add_error','Erro ao adicionar esta <b>Escala</b>. Tente Novamente');
+$FileText->set('alert','escala_cifra_add_ok','<b>M&uacute;sicas</b> selecionadas.');
+$FileText->set('alert','escala_cifra_add_error','Falha ao selecionar as <b>M&uacute;sicas</b>. Altere a escala e tente novamente');
+$FileText->set('alert','escala_membro_add_ok','<b>Membros</b> escalados.');
+$FileText->set('alert','escala_membro_add_error','Falha ao selecionar os <b>Membros</b> escalados. Altere a escala e tente novamente');
+$FileText->set('alert','form_already_sended','Formul&aacute;rio j&aacute; enviado com sucesso');
 ?>

@@ -37,10 +37,14 @@ class Pages{
 		
 		if($page!='login' && $page!='logout')
 		{
+			$count_Musicas = actionMusica::search();
+			$count_Escalas = actionEscala::search('next');
+			$count_Equipes = actionEquipe::search();
+			
 			// Menu QUANT.
-			$this->pagesTPL->setTag('MUSICA_QUANT',count(array_filter((actionMusica::search())? actionMusica::search() : array())));
-			$this->pagesTPL->setTag('ESCALA_QUANT',count(array_filter((actionEscala::search())? actionEscala::search() : array())));
-			$this->pagesTPL->setTag('EQUIPE_QUANT',count(array_filter((actionEquipe::search())? actionEquipe::search() : array())));
+			$this->pagesTPL->setTag('MUSICA_QUANT',count(array_filter(($count_Musicas)? $count_Musicas : array())));
+			$this->pagesTPL->setTag('ESCALA_QUANT',count(array_filter(($count_Escalas)? $count_Escalas : array())));
+			$this->pagesTPL->setTag('EQUIPE_QUANT',count(array_filter(($count_Equipes)? $count_Equipes : array())));
 
 			// IGREJA SELECT
 			$this->pagesTPL->setTag('SELECT_IGREJA',actionIgreja::mountSelectIgreja());
@@ -91,7 +95,8 @@ class Pages{
 	
 	/** ESCALAS **/
 	public function escalasPage(){
-		if(isset($_SESSION['ACESSO']['ID']))
+		$_SESSION['FORM']["LAST"] = '';
+		if(isset($_SESSION['ACESSO']['ID']) && $_SESSION['ACESSO']['ESCALA'] == 'write')
 		{
 			$this->pagesTPL->setTag('SELECT_EQUIPES',actionEquipe::mountSelectEquipes());
 			$this->pagesTPL->setTag('SELECT_MUSICAS',actionMusica::mountSelectMusicas());

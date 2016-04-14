@@ -21,5 +21,14 @@ abstract class actionAgenda{
 		
 		return $results;
 	}
+	
+	/**
+	* Adiciona uma nova agenda
+	* @return boolean
+	*/
+	public static function add($agenda = false)
+	{
+			return AgendaDAO::add($agenda);
+	}
 }
 ?>

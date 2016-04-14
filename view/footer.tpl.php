@@ -43,6 +43,9 @@
 	
 	<!-- Jquery Mask Plugin -->
 	<script src="<tag{PAGES_THEME}>/theme/scripts/plugins/forms/jquery-mask/jquery.mask.js"></script>
+	
+	<!-- DateTimePicker Plugin -->
+	<script src="<tag{PAGES_THEME}>/theme/scripts/plugins/forms/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 
 <?php if ($_SESSION["PAGE"] != 'blank' && $_SESSION["PAGE"] != 'error' && $_SESSION["PAGE"] != 'login' && $_SESSION["PAGE"] != 'signup' && $_SESSION["PAGE"] != 'choose'): ?>
 	<!-- Global -->
@@ -71,9 +74,6 @@
 	
 	<!-- MiniColors Plugin -->
 	<script src="<tag{PAGES_THEME}>/theme/scripts/plugins/color/jquery-miniColors/jquery.miniColors.js"></script>
-	
-	<!-- DateTimePicker Plugin -->
-	<script src="<tag{PAGES_THEME}>/theme/scripts/plugins/forms/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 
 	<!-- Cookie Plugin -->
 	<script src="<tag{PAGES_THEME}>/theme/scripts/plugins/system/jquery.cookie.js"></script>

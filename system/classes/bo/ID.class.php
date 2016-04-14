@@ -10,13 +10,13 @@
 * @subpackage	Object
 * @access 	public
 */
-class ID{
+class ID implements JsonSerializable{
 	/**
 	* `id` INT(X) NOT NULL AUTO_INCREMENT ,
-	* @access private
+	* @access protected
 	* @var integer
 	*/
-	private $id;
+	protected $id;
 	
 	/**
 	* @param integer $id
@@ -31,6 +31,16 @@ class ID{
 	*/
 	public function getID(){
 		return $this->id;
+	}
+	
+	public function jsonSerialize()
+	{
+		foreach(get_object_vars($this) AS $var => $value)
+		{
+			$return[$var] = $value;
+		}
+		
+		return $return;
 	}
 }
 ?>
